@@ -1,0 +1,45 @@
+[
+  {
+    "routine_name": "Core",
+    "routine_description": "A routine that targets the core of the body.",
+    "exercises": [
+      {
+        "name": "Bicep Curl Up",
+        "sets": 2,
+        "reps": 15
+      },
+      {
+        "name": "Squats",
+        "sets": 2,
+        "reps": 15
+      },
+      {
+        "name": "Sit-Ups",
+        "sets": 1,
+        "reps": 20
+      }
+    ]
+  },
+
+  {
+    "routine_name": "Arm",
+    "routine_description": "A routine that targets the enhancement of your arms.",
+    "exercises": [
+      {
+        "name": "Bicep Curl Up",
+        "sets": 2,
+        "reps": 15
+      },
+      {
+        "name": "Sit-Ups",
+        "sets": 2,
+        "reps": 15
+      },
+      {
+        "name": "Squats",
+        "sets": 1,
+        "reps": 20
+      }
+    ]
+  }
+]

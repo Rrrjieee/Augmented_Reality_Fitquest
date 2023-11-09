@@ -1,0 +1,60 @@
+[
+    {
+        "name": "Bicep Curl Up",
+        "reps": 5,
+        "sets": 1,
+        "duration": 10,
+        "description": " A strength training movement that involves flexing the elbow to lift a weight, primarily targeting the biceps muscle.",
+        "image_path": "assets/images/exercises/exercise_bicep_curl_ups.png",
+        "bodypart1": "shoulder",
+        "bodypart2": "elbow",
+        "bodypart3": "wrist",
+        "angle1": "160",
+        "angle2": "30"
+    },
+    {
+        "name": "Squats",
+        "reps": 20,
+        "sets": 1,
+        "duration": 60,
+        "description": "A lower body exercise where you bend your knees and hips to lower your body toward the ground, working the quadriceps, hamstrings, and glutes.",
+        "image_path": "assets/images/exercises/exercise_squats.png",
+        "bodypart1": "hip",
+        "bodypart2": "knee",
+        "bodypart3": "ankle",
+        "angle1": "90",
+        "angle2": "160"
+    },
+    {
+        "name": "Sit-Ups",
+        "reps": 20,
+        "sets": 1,
+        "duration": 40,
+        "description": "An exercise that strengthens the abdominal muscles, where a person sits up from a supine position without using the arms for leverage.",
+        "image_path": "assets/images/exercises/exercise_sit_ups.png"
+    },
+    {
+        "name": "Lunges",
+        "reps": 20,
+        "sets": 1,
+        "duration": 40,
+        "description": "It involves stepping forward, lowering your body toward the ground, and returning back to the starting position. It's the version most people will refer to when they say they're doing lunges. In the beginning of the exercise, your leg muscles have to control the impact of your foot's landing.",
+        "image_path": "assets/images/exercises/exercise_lunges.png"
+    },
+    {
+        "name": "High Knees",
+        "reps": 10,
+        "sets": 1,
+        "duration": 60,
+        "description": "activate your quadriceps, hamstrings, calves, glutes, and hip flexors, helping improve muscular endurance, balance, and coordination in these muscles.",
+        "image_path": "assets/images/exercises/exercise_high_knees.png"
+    },
+    {
+        "name": "Push Up",
+        "reps": 15,
+        "sets": 1,
+        "duration": 30,
+        "description": "They work the triceps, pectoral muscles, and shoulders. Using proper form, they can also strengthen the lower back and core by engaging pulling in the abdominal muscles. Push-ups are a fast and effective exercise for building strength.",
+        "image_path": "assets/images/exercises/exercise_push_ups.png"
+    }
+]

@@ -1,0 +1,53 @@
+[
+    {
+        "username": "User 1",
+        "exercises": [
+            {
+                "name": "Bicep Curl Up",
+                "score": [
+                    0.571984562095944,
+                    0.5437115432768141,
+                    0.5043704129158327,
+                    0.45207728368284356
+                ]
+            },
+            {
+                "name": "Squats",
+                "score": [
+                    0.04764501777179016,
+                    0.0482481884424692
+                ]
+            },
+            {
+                "name": "Sit-Ups",
+                "score": [
+                    0.41161087604547464
+                ]
+            }
+        ]
+    },
+    {
+        "username": "User 2",
+        "exercises": [
+            {
+                "name": "Bicep Curl Up",
+                "score": [
+                    0.6861251347314848,
+                    0.7293492109536641
+                ]
+            }
+        ]
+    },
+    {
+        "username": "User 3",
+        "exercises": []
+    },
+    {
+        "username": "User 4",
+        "exercises": []
+    },
+    {
+        "username": "User 5",
+        "exercises": []
+    }
+]
