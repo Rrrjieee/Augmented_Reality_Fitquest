@@ -41,5 +41,27 @@
         "reps": 20
       }
     ]
+  },
+
+  {
+    "routine_name": "Test Routine",
+    "routine_description": "A routine that targets the enhancement of your arms.",
+    "exercises": [
+      {
+        "name": "Bicep Curl Up",
+        "sets": 1,
+        "reps": 5
+      },
+      {
+        "name": "Lunges",
+        "sets": 1,
+        "reps": 5
+      },
+      {
+        "name": "Squats",
+        "sets": 1,
+        "reps": 5
+      }
+    ]
   }
 ]

@@ -6,6 +6,8 @@ from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.scrollview import ScrollView
 from kivy.graphics import Color, RoundedRectangle, PushMatrix, PopMatrix, Rotate
+from kivy.metrics import dp
+
 
 import user.user_config as cfg
 import admin.app_config as admin_config

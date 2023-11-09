@@ -5,6 +5,8 @@ from kivy.uix.button import Button
 from kivy.uix.label import Label
 from kivy.uix.screenmanager import Screen, ScreenManager, NoTransition
 from kivy.clock import Clock
+from kivy.metrics import dp
+
 
 import user.user_config as user_config
 import admin.app_config as admin_config

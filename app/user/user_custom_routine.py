@@ -9,6 +9,8 @@ from kivy.uix.button import Button
 from kivy.uix.togglebutton import ToggleButton
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.widget import Widget
+from kivy.metrics import dp
+
 
 import user.user_config as user_config
 import admin.app_config as admin_config
@@ -60,11 +62,11 @@ class CustomRoutineScreen(Screen):
         #   Add logo at top left area
         # ===============================
         logo            = Image(
-            source      = admin_config.app['logo'],
-            fit_mode    = "contain",
-            size_hint   = [None, None],
-            size        = [192, 192],
-            pos_hint    = {'x': 0.04, 'top': 1}
+            source      =admin_config.app['logo'],
+            fit_mode    ="contain",
+            size_hint   =[None, None],
+            size        =[192, 192],
+            pos_hint    ={'x': 0.04, 'top': 1}
         )
         layout.add_widget(logo)
 
@@ -72,43 +74,43 @@ class CustomRoutineScreen(Screen):
         #   Add cabaret at top right corner
         # ===============================
         cabaret_label   = BGLabel(
-            text        = 'CUSTOMIZED ROUTINE',
-            font_name   = admin_config.font_name[0],
-            font_size   = admin_config.font_size[3],
-            color       = user_config.button_params['color'],
-            size_hint   = [0.44, 0.12],
-            pos_hint    = {'right': 0.96, 'top': 0.96}
+            text        ='CUSTOMIZED ROUTINE',
+            font_name   =admin_config.font_name[0],
+            font_size   =admin_config.font_size[3],
+            color       =user_config.button_params['color'],
+            size_hint   =[0.44, 0.12],
+            pos_hint    ={'right': 0.96, 'top': 0.96}
         )
         layout.add_widget(cabaret_label)
 
         # =======================================
         #           Back button
         # =======================================
-        back_btn                = Button(
-            background_normal   = user_config.button_params['bg_normal'],
-            background_color    = user_config.button_params['bg_color'],
-            color               = user_config.button_params['color'],
-            text                = 'BACK',
-            font_name           = admin_config.font_name[2],
-            font_size           = admin_config.font_size[1],
-            size_hint           = [0.16, 0.12],
-            pos_hint            = {'x': 0.02, 'y': 0.02}
+        back_btn                =Button(
+            background_normal   =user_config.button_params['bg_normal'],
+            background_color    =user_config.button_params['bg_color'],
+            color               =user_config.button_params['color'],
+            text                ='BACK',
+            font_name           =admin_config.font_name[2],
+            font_size           =admin_config.font_size[1],
+            size_hint           =[0.16, 0.12],
+            pos_hint            ={'x': 0.02, 'y': 0.02}
         )
         layout.add_widget(back_btn)
         BackButtonDispatch.on_release(
             back_btn, 'user_routine_selection', self._sm, 'right')
         self.add_widget(layout)
 
-        start_btn = Button(
-            background_normal=user_config.button_params['bg_normal'],
-            background_color=user_config.button_params['bg_color'],
-            color=user_config.button_params['color'],
-            text='START',
-            font_name=admin_config.font_name[2],
-            font_size=admin_config.font_size[1],
-            size_hint=[0.16, 0.12],
-            pos_hint={'right': 0.98, 'y': 0.02},
-            disabled=True
+        start_btn               = Button(
+            background_normal   =user_config.button_params['bg_normal'],
+            background_color    =user_config.button_params['bg_color'],
+            color               =user_config.button_params['color'],
+            text                ='START',
+            font_name           =admin_config.font_name[2],
+            font_size           =admin_config.font_size[1],
+            size_hint           =[0.16, 0.12],
+            pos_hint            ={'right': 0.98, 'y': 0.02},
+            disabled            =True
         )
         layout.add_widget(start_btn)
         self.start_button = start_btn
@@ -140,7 +142,7 @@ class CustomRoutineScreen(Screen):
             self._widgets['reps'].state     = "normal"
         if self._widgets['sets']:
             self._widgets['sets'].state     = "normal"
-            
+
         self._widgets['exercise']           = None
         self._widgets['reps']               = None
         self._widgets['sets']               = None
@@ -175,7 +177,17 @@ class CustomRoutineScreen(Screen):
             spacing=20,
         )
         self.child_layout.add_widget(self.exer_options)
-
+        
+        self.exer_options_steps = Label(
+            size_hint=[0.30, 1.0],
+            pos_hint={'x': 0, 'y': 0.25},
+            font_size=25,
+            text='Step 1: Please choose an exercise',
+            bold=True,
+            color=(101/255, 64/255, 139/255, 1),
+        )
+        self.child_layout.add_widget(self.exer_options_steps)
+        
         # =======================================
         #       Create Button Options
         # =======================================
@@ -191,8 +203,11 @@ class CustomRoutineScreen(Screen):
 
             img_btn         = ImageButton2(
                 size_hint   = [1.0, None],
+                width       = self.width,
+                height      = dp(200),
                 pos_hint    = {'x': 0, 'y': 0},
-                fit_mode    = 'fill',
+                keep_ratio  = True,
+                allow_stretch = True,
                 source      = exercise.img_path,
                 group       = 'exer_options',
             )
@@ -203,15 +218,18 @@ class CustomRoutineScreen(Screen):
                 def on_img_click(instance):
                     nonlocal self
                     if (self._widgets['exercise'] is not None) and (instance != self._widgets['exercise']):
+                        print("Resetting previous widget to normal")
                         self._widgets['exercise'].state = 'normal'
                         self._widgets['exercise'].canvas.ask_update()
 
                     if instance.state == 'normal':
                         self._choice['exercise']    = None
                         self._widgets['exercise']   = None
+                        print("Deselection")
                     else:
                         self._choice['exercise']    = exercise
                         self._widgets['exercise']   = instance
+                        print("Selection")
 
                     self.insert_btn.disabled = not self.can_enable_insert_btn()
 
@@ -224,15 +242,25 @@ class CustomRoutineScreen(Screen):
         # =======================================
         #         Create Reps options
         # =======================================
-        self.reps_options   = ScrollableOption(
-            size_hint       = [0.30, 0.54],
-            pos_hint        = {'x': 0.33, 'y': 0.46},
-            font_size       = admin_config.font_size[2],
-            cols            = 3,
-            text            = 'REPS:',
-            spacing         = 5,
+        self.reps_options       = ScrollableOption(
+            size_hint           =[0.30, 0.54],
+            pos_hint            ={'x': 0.33, 'y': 0.46},
+            font_size           =admin_config.font_size[2],
+            cols                =3,
+            text                ='REPS:',
+            spacing             =5,
         )
         self.child_layout.add_widget(self.reps_options)
+
+        self.reps_options_steps = Label(
+            size_hint           =[0.30, 0.54],
+            pos_hint            ={'x': 0.33, 'y': 0.58},
+            font_size           =22,
+            text                ='Step 2: Please choose a number of reps/counts',
+            bold                =True,
+            color               =(101/255, 64/255, 139/255, 1),
+        )
+        self.child_layout.add_widget(self.reps_options_steps)
 
         for i in range(1, user_config.user_reps_count + 1):
             rep_btn         = ToggleButton(
@@ -272,6 +300,16 @@ class CustomRoutineScreen(Screen):
         )
         self.child_layout.add_widget(self.sets_options)
 
+        self.sets_options_steps     = Label(
+            size_hint               =[0.30, 0.42],
+            pos_hint                ={'x': 0.33, 'y': 0.09},
+            font_size               =22,
+            text                    ='Step 3: Please choose a number of sets',
+            bold                    =True,
+            color                   =(101/255, 64/255, 139/255, 1),
+        )
+        self.child_layout.add_widget(self.sets_options_steps)
+
         for i in range(1, user_config.user_sets_count + 1):
             set_btn         = ToggleButton(
                 text        = str(i),
@@ -301,25 +339,25 @@ class CustomRoutineScreen(Screen):
         #         Create insert button
         # =======================================
         self.insert_btn         = Button(
-            background_normal   = user_config.button_params['bg_normal'],
-            background_color    = user_config.button_params['bg_color'],
-            color               = user_config.button_params['color'],
-            text                = 'INSERT',
-            font_name           = admin_config.font_name[2],
-            font_size           = admin_config.font_size[1],
-            size_hint           = [0.16, 0.12],
-            pos_hint            = {'right': 0.80, 'y': 0.02},
-            disabled            = True
+            background_normal   =user_config.button_params['bg_normal'],
+            background_color    =user_config.button_params['bg_color'],
+            color               =user_config.button_params['color'],
+            text                ='INSERT',
+            font_name           =admin_config.font_name[2],
+            font_size           =admin_config.font_size[1],
+            size_hint           =[0.16, 0.12],
+            pos_hint            ={'right': 0.80, 'y': 0.02},
+            disabled            =True
         )
         layout.add_widget(self.insert_btn)
 
         def on_insert_exercise(instance):
             routine = self._choice['routine']
             if routine is None:
-                routine                 = RoutineDetails(
-                    name                = "Custom Routine",
-                    desc                = "A customized routine that grants flexibility of choice for users.",
-                    exercises           = []
+                routine     = RoutineDetails(
+                    name    ="Custom Routine",
+                    desc    ="A customized routine that grants flexibility of choice for users.",
+                    exercises=[]
                 )
                 self._choice['routine'] = routine
 
@@ -328,15 +366,16 @@ class CustomRoutineScreen(Screen):
             derived_exer                = exercise.copy()
             derived_exer.reps           = self._choice['reps']
             derived_exer.sets           = self._choice['sets']
-            derived_exer.duration       = int(exercise.duration * derived_exer.reps / exercise.reps)
+            derived_exer.duration       = int(
+                exercise.duration * derived_exer.reps / exercise.reps)
 
-            routine.add_exercise(derived_exer)
+            routine.exercises.append(derived_exer)
 
             self.clear_data()
             self.draw_exer_list()
             self.check_start_state()
 
-        self.insert_btn.bind(on_release = on_insert_exercise)
+        self.insert_btn.bind(on_release =on_insert_exercise)
         self.draw_exer_list()
 
     def draw_exer_list(self):
@@ -345,12 +384,12 @@ class CustomRoutineScreen(Screen):
             del self.exer_list_layout
 
         self.exer_list_layout   = ScrollableOption(
-            size_hint           = [0.34, 1.00],
-            pos_hint            = {'x': 0.66, 'y': 0.0},
-            font_size           = admin_config.font_size[2],
-            cols                = 1,
-            text                = 'Exercise List:',
-            spacing             = 5,
+            size_hint           =[0.34, 1.00],
+            pos_hint            ={'x': 0.66, 'y': 0.0},
+            font_size           =admin_config.font_size[2],
+            cols                =1,
+            text                ='Exercise List:',
+            spacing             =5,
         )
         self.exer_list_layout.get_grid_container().size_hint = [0.75, 0.70]
         self.child_layout.add_widget(self.exer_list_layout)
@@ -377,16 +416,16 @@ class CustomRoutineScreen(Screen):
             # =======================================
             #           Render each label
             # =======================================
-            exer_label_box = GridLayout(
-                size_hint=[0.4, 1.0],
-                pos_hint={'x': 0, 'y': 0},
-                cols=1,
+            exer_label_box  = GridLayout(
+                size_hint   =[0.4, 1.0],
+                pos_hint    ={'x': 0, 'y': 0},
+                cols        =1,
             )
             exer_layout.add_widget(exer_label_box)
 
             exer_label_name = Label(
-                text='Exercise:',
-                halign='left',
+                text        ='Exercise:',
+                halign      ='left',
                 color=[0, 0, 0, 1]
             )
             exer_label_name.bind(text_size=exer_label_name.setter('size'))
@@ -395,15 +434,15 @@ class CustomRoutineScreen(Screen):
             exer_label_reps = Label(
                 text        ='Reps:',
                 halign      ='left',
-                color=[0, 0, 0, 1]
+                color       =[0, 0, 0, 1]
             )
             exer_label_reps.bind(text_size=exer_label_reps.setter('size'))
             exer_label_box.add_widget(exer_label_reps)
 
             exer_label_sets = Label(
-                text        = 'Sets:',
-                halign      = 'left',
-                color       = [0, 0, 0, 1]
+                text        ='Sets:',
+                halign      ='left',
+                color       =[0, 0, 0, 1]
             )
             exer_label_sets.bind(text_size=exer_label_sets.setter('size'))
             exer_label_box.add_widget(exer_label_sets)
@@ -411,33 +450,33 @@ class CustomRoutineScreen(Screen):
             # =======================================
             #           Render each value
             # =======================================
-            exer_value_box = GridLayout(
-                size_hint=[0.45, 1.0],
-                pos_hint={'x': 0.4, 'y': 0},
-                cols=1,
+            exer_value_box  = GridLayout(
+                size_hint   =[0.45, 1.0],
+                pos_hint    ={'x': 0.4, 'y': 0},
+                cols        =1,
             )
             exer_layout.add_widget(exer_value_box)
 
             exer_value_name = Label(
-                text=exercise.name,
-                halign='left',
-                color=[0, 0, 0, 1]
+                text        =exercise.name,
+                halign      ='left',
+                color       =[0, 0, 0, 1]
             )
             exer_value_name.bind(text_size=exer_value_name.setter('size'))
             exer_value_box.add_widget(exer_value_name)
 
             exer_value_reps = Label(
-                text=str(exercise.reps),
-                halign='left',
-                color=[0, 0, 0, 1]
+                text        =str(exercise.reps),
+                halign      ='left',
+                color       =[0, 0, 0, 1]
             )
             exer_value_reps.bind(text_size=exer_value_reps.setter('size'))
             exer_value_box.add_widget(exer_value_reps)
 
             exer_value_sets = Label(
-                text=str(exercise.sets),
-                halign='left',
-                color=[0, 0, 0, 1]
+                text        =str(exercise.sets),
+                halign      ='left',
+                color       =[0, 0, 0, 1]
             )
             exer_value_sets.bind(text_size=exer_value_sets.setter('size'))
             exer_value_box.add_widget(exer_value_sets)
@@ -474,5 +513,5 @@ class CustomRoutineScreen(Screen):
         if self._choice['finalized'] and hasattr(self, 'exer_list_layout'):
             self.child_layout.remove_widget(self.exer_list_layout)
             del self.exer_list_layout
-
+            
         self.clear_data()

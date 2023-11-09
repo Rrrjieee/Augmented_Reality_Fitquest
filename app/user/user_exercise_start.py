@@ -9,6 +9,9 @@ from kivy.uix.screenmanager import ScreenManager, SlideTransition, Screen, FadeT
 from kivy.uix.camera import Camera
 from kivy.uix.widget import Widget
 from kivy.clock import Clock
+from kivy.metrics import dp
+from threading import Thread
+
 from kivy.graphics import Color, RoundedRectangle
 from kivy.graphics.texture import Texture
 from typing import Callable
@@ -28,7 +31,6 @@ import cv2
 import numpy as np
 import PIL
 from math import ceil
-from threading import Thread
 
 class BackButtonDispatch:
     back_button_callback = None
@@ -47,7 +49,6 @@ class ExerciseScreen(Screen):
     count       = NumericProperty(0, allownone=False)
     reps        = NumericProperty(0, allownone=False)
     exercise    = StringProperty("", allownone=False)
-    duration    = BoundedNumericProperty(0, min=0, allownone=False)
 
     def reset_average(self):
         if not hasattr(self, 'exer_average'):
@@ -58,7 +59,7 @@ class ExerciseScreen(Screen):
         else:
             self.exer_average['exercise'].clear()
             self.exer_average['average'].clear()
-
+    
     def __new__(cls, *args, **kwargs):
         if cls._instance is None:
             cls._instance   = super(ExerciseScreen, cls).__new__(cls, **kwargs)
@@ -78,6 +79,24 @@ class ExerciseScreen(Screen):
         layout.add_widget(bg)
         self._layout        = layout
         self._active        = False
+
+        # ===============================
+        #        Instructions widget
+        # ===============================
+        reminders_container             = FloatLayout(
+            size_hint                   = [0.4, 0.80],
+            pos_hint                    = {'center_x': 0.45, 'center_y': 0.75},
+        )
+        layout.add_widget(reminders_container)
+
+        reminders_label                 = Label(
+            size_hint                   = [0.20, 0.65],
+            pos_hint                    = {'center_x': 0.5, 'center_y': 0.5},
+            text                        = "Please position yourself within the camera frame",
+            font_size                   = 25
+        )
+        reminders_container.add_widget(reminders_label)
+        self.reminders_label            = reminders_label
 
         # ===============================
         #        Counter widget
@@ -130,6 +149,7 @@ class ExerciseScreen(Screen):
         # ===============================
         #        Info Display
         # ===============================
+
         info_container                  = InfoLayout(
             size_hint                   = [0.30, 0.75],
             pos_hint                    = {'right': 0.98, 'y': 0.125},
@@ -165,15 +185,6 @@ class ExerciseScreen(Screen):
         info_label_ctn.add_widget(info_label_reps)
         info_label_reps.bind(text_size  = info_label_reps.setter('size'))
 
-        info_label_dur                  = Label(
-            size_hint                   = [None, None],
-            font_size                   = admin_config.font_size[0],
-            text                        = 'Duration:',
-            halign                      = 'left'
-        )
-        info_label_ctn.add_widget(info_label_dur)
-        info_label_dur.bind(text_size  = info_label_dur.setter('size'))
-
         # ===============================
         #        Value Container
         # ===============================
@@ -203,16 +214,6 @@ class ExerciseScreen(Screen):
         info_value_ctn.add_widget(info_value_reps)
         info_value_reps.bind(text_size  = info_value_reps.setter('size'))
         self.reps_label                 = info_value_reps
-
-        info_value_dur                  = Label(
-            size_hint                   = [None, None],
-            font_size                   = admin_config.font_size[0],
-            text                        = '0',
-            halign                      = 'left'
-        )
-        info_value_ctn.add_widget(info_value_dur)
-        info_value_dur.bind(text_size   = info_value_dur.setter('size'))
-        self.dur_label                  = info_value_dur
 
         self.add_widget(layout)
 
@@ -247,12 +248,14 @@ class ExerciseScreen(Screen):
                 self._loaded            = True
                 break
             
-            if self.duration < tick:
-                self.duration           = 0
-                self.to_next_screen()
-                return
+            # Remove the duration check
+            # if self.duration < tick:
+            #     self.duration           = 0
+            #     self.to_next_screen()
+            #     return
             
-            self.duration              -= tick
+            # Remove the duration decrement
+            # self.duration              -= tick
             break
 
         ret_flag, frame                 = self.cam_viewer.read()
@@ -284,7 +287,7 @@ class ExerciseScreen(Screen):
         #     self.run_instances += 1
 
         #     if ret_code[0] == ReturnCode.SUCCESS:
-        #         self.count     += 1
+        #         self.count  += 1
         # except:
         #     pass
 
@@ -337,14 +340,13 @@ class ExerciseScreen(Screen):
             ''')
 
         while len(rout_list.exercises) > 0:
-            exercise             = rout_list.exercises[0]
-            if deduct:
-                exercise.sets   -= 1
+                exercise             = rout_list.exercises[0]
+                if deduct:
+                    exercise.sets   -= 1
 
-            if exercise.sets > -1:
-                return exercise
-            
-            rout_list.exercises.pop(0)
+                if exercise.sets > -1:
+                    return exercise
+                rout_list.exercises.pop(0)
 
         return None
 
@@ -371,7 +373,8 @@ class ExerciseScreen(Screen):
         self.reps               = exercise.reps
         self.count              = 0
         self.exercise           = exercise.name
-        self.duration           = exercise.duration
+        # Remove the duration setting
+        # self.duration           = exercise.duration
         self.exer_image.source  = exercise.img_path
         self._loaded            = False
 
@@ -399,9 +402,6 @@ class ExerciseScreen(Screen):
     def on_exercise(self, instance, value):
         self.exer_label.text    = value
 
-    def on_duration(self, instance, value):
-        self.dur_label.text     = str(ceil(value))
-
     def has_remaining_exercises(self):
         rout_list   = self._app.post_routine()
         rout_list: RoutineDetails
@@ -416,6 +416,9 @@ class ExerciseScreen(Screen):
         except ZeroDivisionError:
             self.exer_average['average'].append(0.0)
 
+        self.active_exercise    = None
+        self._sm.transition     = FadeTransition(duration=0.5)
+        self._sm.current        = 'exercise_cooldown'
         self.active_exercise    = None
         self._sm.transition     = FadeTransition(duration=0.5)
         self._sm.current        = 'exercise_cooldown'
@@ -455,7 +458,7 @@ class ExerciseScreen(Screen):
         if self.exit_confirmation_popup is not None:
             self.exit_confirmation_popup.dismiss()
             self.active_exercise = None
-            # Resume camera updates and processing
+           # Resume camera updates and processing
             self._active        = True
             self.cam_monitor    = Clock.schedule_interval(self.on_camera_update, self.tick_rate)
             self.exit_confirmation_popup = None  # Reset the reference to None

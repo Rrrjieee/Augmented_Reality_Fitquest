@@ -5,6 +5,7 @@ from kivy.uix.label import Label
 from kivy.uix.screenmanager import Screen, ScreenManager, SlideTransition
 from kivy.properties import ListProperty
 from functools import partial
+from kivy.metrics import dp
 
 import user.user_config as user_config
 from user.user_widgets import *

@@ -3,6 +3,7 @@ from kivy.uix.image import Image
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.screenmanager import ScreenManager, Screen, SlideTransition
 from kivy.core.audio import SoundLoader
+from kivy.metrics import dp
 
 # Admin widgets and screens
 from admin.admin_widgets import *

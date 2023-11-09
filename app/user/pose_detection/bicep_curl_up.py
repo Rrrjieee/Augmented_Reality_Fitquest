@@ -37,7 +37,7 @@ def check(image):
             ave += inside
             inside  = 31
             stage   = "down"
-        
+            
         return [ret_code, angle]
     
     return check_pose(image, ret_code, on_bicep_curl, 30)

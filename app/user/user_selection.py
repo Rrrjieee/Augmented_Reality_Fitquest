@@ -4,6 +4,7 @@ from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.button import Button
 from kivy.uix.label import Label
 from kivy.uix.screenmanager import ScreenManager, SlideTransition, Screen
+from kivy.metrics import dp
 
 import user.user_config as user_config
 import admin.app_config as admin_config
